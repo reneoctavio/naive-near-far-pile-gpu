@@ -12,6 +12,8 @@
 #define DEBUG_MSG 0
 #endif
 
+#include <sys/time.h>
+
 #include <cusp/csr_matrix.h>
 #include <cusp/format_utils.h>
 #include <cusp/print.h>
@@ -143,6 +145,18 @@ struct is_dist_set_in_near_pile {
 
 	__host__ __device__ bool operator()(const int& x) {
 		return distance_begin[x] <= k_upper;
+	}
+};
+
+struct is_dist_set {
+	int* distance_begin;
+	const int k_lower;
+	is_dist_set(int* _distance_begin, int _upper_distance) :
+			distance_begin(_distance_begin), k_lower(_upper_distance) {
+	}
+
+	__host__ __device__ bool operator()(const int& x) {
+		return distance_begin[x] < k_lower;
 	}
 };
 
